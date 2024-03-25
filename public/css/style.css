@@ -49,4 +49,6 @@ button:hover {
     width: 100%; /* Adjust the width to fit your form design */
     height: auto; /* Auto height will expand with the content */
     min-height: 150px; /* Set a minimum height to make it bigger */
+    min-width: 100%; /* Set a minimum width to make it bigger */
+    max-width: 100%; /* Set a maximum width to make it smaller */
 }

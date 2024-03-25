@@ -12,6 +12,8 @@ const mongoUri = process.env.MONGODB_URI;
 mongoose.connect(mongoUri)
   .then(() => {
     console.log('Connected to MongoDB Atlas');
+    const conn = mongoose.connection;
+    console.log(`Connected to database: ${conn.name} on host: ${conn.host}`);
   })
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -40,10 +42,15 @@ app.get('/', (req, res) => {
 // API route for submitting jobs
 app.post('/submit-job', async (req, res) => {
     const jobData = new Job(req.body);
+    console.log('Received job submission:', req.body); // Log received data
+
+    const startTime = Date.now(); // Start timing the database operation
 
     try {
         await jobData.save();
-        res.status(200).send("Job submitted successfully.");
+        const duration = Date.now() - startTime; // Calculate operation duration
+        console.log(`Job submitted successfully in ${duration}ms.`); // Log success with duration
+        res.status(200).json({ message: "Job submitted successfully." });
     } catch (e) {
         console.error("Error saving job:", e);
         res.status(500).send("Error submitting job.");
