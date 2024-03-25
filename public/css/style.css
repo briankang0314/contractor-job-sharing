@@ -44,3 +44,9 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.job-description {
+    width: 100%; /* Adjust the width to fit your form design */
+    height: auto; /* Auto height will expand with the content */
+    min-height: 150px; /* Set a minimum height to make it bigger */
+}

@@ -8,34 +8,29 @@
 </head>
 <body>
     <div class="container">
-        <h2>Job Sharing Form</h2>
+        <h2>오더 공유 양식</h2>
         <form id="jobShareForm">
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">업체명:</label>
                 <input type="text" id="name" name="name" required>
             </div>
             
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="phone">전화번호:</label>
+                <input type="tel" id="phone" name="phone" title="다음과 같이 전화번호를 기입해주세요: xxx-xxxx-xxxx">
             </div>
             
             <div class="form-group">
-                <label for="company">Company Name (Optional):</label>
-                <input type="text" id="company" name="company">
+                <label for="jobDescription">오더 내용:</label>
+                <textarea id="jobDescription" name="jobDescription" required rows="10" cols="50" class="job-description">지역:&#13;&#10;&#13;&#10;작업:&#13;&#10;&#13;&#10;시간:</textarea>
             </div>
             
             <div class="form-group">
-                <label for="jobDescription">Job Description:</label>
-                <textarea id="jobDescription" name="jobDescription" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="desiredFee">Desired Fee (%):</label>
+                <label for="desiredFee">수수료 (%):</label>
                 <input type="number" id="desiredFee" name="desiredFee" required min="0" max="100">
             </div>
             
-            <button type="submit" class="submit-btn">Submit Job</button>
+            <button type="submit" class="submit-btn">오더 공유</button>
         </form>
     </div>
     
