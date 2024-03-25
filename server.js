@@ -1,47 +1,43 @@
+require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Multer setup for handling multipart/form-data (for the image)
-const upload = multer({ dest: 'uploads/' });
+// MongoDB Atlas connection URI from your .env file
+const mongoUri = process.env.MONGODB_URI;
 
-// Connect to MongoDB
-const mongoUri = 'your_mongodb_connection_uri';
-const client = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDB Atlas');
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+  })
+  .catch(err => console.error('MongoDB connection error:', err));
 
-async function connectDb() {
+// Define a Mongoose schema for the job
+const jobSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  company: String,
+  jobDescription: { type: String, required: true },
+  desiredFee: { type: Number, required: true },
+});
+
+// Create a Mongoose model based on the schema
+const Job = mongoose.model('Job', jobSchema);
+
+app.use(express.json());
+
+// API route for submitting jobs
+app.post('/submit-job', async (req, res) => {
+    const jobData = new Job(req.body);
+
     try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-    } catch (e) {
-        console.error("Could not connect to MongoDB:", e);
-    }
-}
-
-connectDb();
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// Route for submitting the job
-app.post('/submit-job', upload.single('jobImage'), async (req, res) => {
-    const jobData = req.body;
-    // In a real application, upload the file to cloud storage here and save the URL in jobData
-
-    try {
-        const jobsCollection = client.db("contractors").collection("jobs");
-        await jobsCollection.insertOne(jobData);
+        await jobData.save();
         res.status(200).send("Job submitted successfully.");
     } catch (e) {
         console.error("Error saving job:", e);
         res.status(500).send("Error submitting job.");
     }
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
 });
